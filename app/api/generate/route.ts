@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     `;
 
     const result = streamText({
-      model: gateway('openai:gpt-4o'),
+      model: gateway('gpt-4o'),
       system: systemPrompt,
       prompt: `Write the video script for the topic: ${topic}`,
     });

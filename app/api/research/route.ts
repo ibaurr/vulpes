@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     const { object } = await generateObject({
-      model: gateway('openai:gpt-4o-mini'),
+      model: gateway('gpt-4o-mini'),
       schema: z.object({
         facts: z.array(z.string()).describe('A list of 5-8 verified facts about the topic. Make them detailed but concise.'),
       }),
