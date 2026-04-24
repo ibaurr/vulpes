@@ -7,6 +7,7 @@ import { StepReview } from "./StepReview"
 import { StepConfig } from "./StepConfig"
 import { StepGeneration } from "./StepGeneration"
 import { AnimatePresence } from "framer-motion"
+import { ProgressStepper } from "./ProgressStepper"
 
 type Step = "discovery" | "researching" | "review" | "config" | "generation"
 
@@ -53,6 +54,7 @@ export function Wizard() {
 
   return (
     <div className="w-full">
+      <ProgressStepper currentStep={currentStep} />
       <AnimatePresence mode="wait">
         {currentStep === "discovery" && (
           <StepDiscovery key="discovery" onComplete={handleDiscoveryComplete} />
