@@ -9,11 +9,8 @@ export default function Home() {
       <div className="max-w-6xl w-full flex flex-col items-center">
         <header className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
-            The Orbital Script Engine
+            Vulpes: AI Video Script Engine
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            A Research-First AI Video Script Generator. Grounded in reality, tailored for you.
-          </p>
         </header>
 
         <Wizard />
