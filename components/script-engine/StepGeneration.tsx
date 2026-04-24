@@ -18,6 +18,7 @@ interface StepGenerationProps {
 export function StepGeneration({ topic, facts, notes, tone, length, onReset }: StepGenerationProps) {
   const { completion, isLoading, complete } = useCompletion({
     api: "/api/generate",
+    streamProtocol: "text",
   })
   
   const [copied, setCopied] = useState(false)

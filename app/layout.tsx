@@ -15,7 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Vulpes",
   description: "Research First AI Video Script Generator",
-  themeColor: "#020617",
   openGraph: {
     title: "Vulpes",
     description: "Research First AI Video Script Generator",
