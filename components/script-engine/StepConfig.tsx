@@ -36,15 +36,14 @@ export function StepConfig({ onComplete }: StepConfigProps) {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-3">
-            <label className="text-sm font-semibold text-slate-900">Narrative Tone</label>
+            <label className="text-sm font-semibold text-slate-900">Tone</label>
             <Select value={tone} onChange={(e) => setTone(e.target.value)}>
-              <option value="Neutral">Neutral & Informative</option>
-              <option value="Dramatic">Dramatic & Cinematic</option>
-              <option value="Uplifting">Uplifting & Inspiring</option>
-              <option value="Humorous">Humorous & Light</option>
+              <option value="Neutral">Neutral</option>
+              <option value="Dramatic">Dramatic</option>
+              <option value="Uplifting">Uplifting</option>
             </Select>
           </div>
-          
+
           <div className="space-y-3">
             <label className="text-sm font-semibold text-slate-900">Target Length</label>
             <Select value={length.toString()} onChange={(e) => setLength(e.target.value)}>
