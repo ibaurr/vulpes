@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Loader2, Copy, Check, RotateCcw, SendHorizonal, Sparkles, History, Download, FileText, FileDown, Clock } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { saveScript } from "@/lib/script-history"
+import { computeWordStats } from "@/lib/word-stats"
 
 interface StepGenerationProps {
   topic: string;
@@ -20,16 +21,6 @@ interface StepGenerationProps {
 interface Revision {
   instruction: string;
   version: number;
-}
-
-function computeWordStats(text: string) {
-  if (!text) return { words: 0, readTime: "0 min" }
-  const words = text.trim().split(/\s+/).filter(Boolean).length
-  const minutes = Math.ceil(words / 150) // ~150 wpm for narrated video scripts
-  return {
-    words,
-    readTime: minutes <= 1 ? "~1 min" : `~${minutes} min`,
-  }
 }
 
 export function StepGeneration({ topic, facts, notes, tone, length, onReset, preloadedScript }: StepGenerationProps) {
