@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, useCallback } from "react"
+import { useEffect, useRef, useState, useCallback, useMemo } from "react"
 import { useCompletion } from "@ai-sdk/react"
 import ReactMarkdown from "react-markdown"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Loader2, Copy, Check, RotateCcw, SendHorizonal, Sparkles, History } from "lucide-react"
+import { Loader2, Copy, Check, RotateCcw, SendHorizonal, Sparkles, History, Download, FileText, FileDown, Clock } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { saveScript } from "@/lib/script-history"
 
 interface StepGenerationProps {
   topic: string;
@@ -13,6 +14,7 @@ interface StepGenerationProps {
   tone: string;
   length: string;
   onReset: () => void;
+  preloadedScript?: string | null;
 }
 
 interface Revision {
@@ -20,7 +22,17 @@ interface Revision {
   version: number;
 }
 
-export function StepGeneration({ topic, facts, notes, tone, length, onReset }: StepGenerationProps) {
+function computeWordStats(text: string) {
+  if (!text) return { words: 0, readTime: "0 min" }
+  const words = text.trim().split(/\s+/).filter(Boolean).length
+  const minutes = Math.ceil(words / 150) // ~150 wpm for narrated video scripts
+  return {
+    words,
+    readTime: minutes <= 1 ? "~1 min" : `~${minutes} min`,
+  }
+}
+
+export function StepGeneration({ topic, facts, notes, tone, length, onReset, preloadedScript }: StepGenerationProps) {
   // --- Initial generation ---
   const { completion: initialCompletion, isLoading: isGenerating, complete } = useCompletion({
     api: "/api/generate",
@@ -33,25 +45,29 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
     streamProtocol: "text",
   })
 
-  const [currentScript, setCurrentScript] = useState("")
+  const [currentScript, setCurrentScript] = useState(preloadedScript || "")
   const [revisionHistory, setRevisionHistory] = useState<Revision[]>([])
   const [revisionInput, setRevisionInput] = useState("")
   const [copied, setCopied] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
+  const [showExport, setShowExport] = useState(false)
+  const [saved, setSaved] = useState(false)
 
   const hasTriggered = useRef(false)
+  const hasSaved = useRef(!!preloadedScript) // don't re-save loaded scripts
   const inputRef = useRef<HTMLInputElement>(null)
   const scriptEndRef = useRef<HTMLDivElement>(null)
+  const exportRef = useRef<HTMLDivElement>(null)
 
-  // Trigger initial generation
+  // Trigger initial generation (skip if preloaded)
   useEffect(() => {
-    if (!hasTriggered.current) {
+    if (!hasTriggered.current && !preloadedScript) {
       hasTriggered.current = true;
       complete("", {
         body: { topic, facts, notes, tone, length }
       })
     }
-  }, [complete, topic, facts, notes, tone, length])
+  }, [complete, topic, facts, notes, tone, length, preloadedScript])
 
   // Capture finalized initial script
   useEffect(() => {
@@ -67,6 +83,50 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
     }
   }, [isRevising, revisionCompletion, revisionHistory.length])
 
+  // Auto-save script after initial generation completes
+  useEffect(() => {
+    if (!isGenerating && currentScript && !hasSaved.current) {
+      hasSaved.current = true
+      saveScript({
+        topic,
+        script: currentScript,
+        tone,
+        length,
+        version: 1,
+      })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    }
+  }, [isGenerating, currentScript, topic, tone, length])
+
+  // Auto-save after revision completes
+  useEffect(() => {
+    if (!isRevising && revisionCompletion && revisionHistory.length > 0) {
+      saveScript({
+        topic,
+        script: revisionCompletion,
+        tone,
+        length,
+        version: revisionHistory.length + 1,
+      })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    }
+  }, [isRevising, revisionCompletion, revisionHistory.length, topic, tone, length])
+
+  // Close export menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (exportRef.current && !exportRef.current.contains(e.target as Node)) {
+        setShowExport(false)
+      }
+    }
+    if (showExport) {
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [showExport])
+
   // The text to display — prefer streaming content when active
   const displayText = isRevising
     ? revisionCompletion || currentScript
@@ -76,6 +136,9 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
 
   const isStreaming = isGenerating || isRevising
   const generationDone = !isGenerating && !!currentScript
+
+  // Word count & read time
+  const stats = useMemo(() => computeWordStats(displayText), [displayText])
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(currentScript || initialCompletion)
@@ -110,6 +173,37 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
     }
   }
 
+  // --- Export handlers ---
+  const downloadFile = useCallback((content: string, filename: string, mimeType: string) => {
+    const blob = new Blob([content], { type: mimeType })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    setShowExport(false)
+  }, [])
+
+  const handleExportMarkdown = useCallback(() => {
+    const filename = `${topic.toLowerCase().replace(/\s+/g, "-")}-script.md`
+    downloadFile(currentScript || initialCompletion, filename, "text/markdown")
+  }, [currentScript, initialCompletion, topic, downloadFile])
+
+  const handleExportText = useCallback(() => {
+    // Strip markdown formatting for plain text
+    const plain = (currentScript || initialCompletion)
+      .replace(/#{1,6}\s/g, "")
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/\*([^*]+)\*/g, "$1")
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    const filename = `${topic.toLowerCase().replace(/\s+/g, "-")}-script.txt`
+    downloadFile(plain, filename, "text/plain")
+  }, [currentScript, initialCompletion, topic, downloadFile])
+
   const currentVersion = revisionHistory.length > 0 ? revisionHistory.length + 1 : 1
 
   return (
@@ -139,6 +233,19 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
               </motion.span>
             </div>
             <div className="flex gap-2 shrink-0">
+              {/* Auto-save indicator */}
+              <AnimatePresence>
+                {saved && (
+                  <motion.span
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="inline-flex items-center gap-1 text-xs text-emerald-600 font-medium self-center"
+                  >
+                    <Check className="w-3 h-3" /> Saved
+                  </motion.span>
+                )}
+              </AnimatePresence>
               {revisionHistory.length > 0 && (
                 <Button
                   variant="outline"
@@ -154,6 +261,44 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
                 {copied ? <Check className="w-4 h-4 mr-1.5 text-green-500" /> : <Copy className="w-4 h-4 mr-1.5" />}
                 Copy
               </Button>
+              {/* Export dropdown */}
+              <div className="relative" ref={exportRef}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowExport(!showExport)}
+                  disabled={!displayText}
+                >
+                  <Download className="w-4 h-4 mr-1.5" />
+                  Export
+                </Button>
+                <AnimatePresence>
+                  {showExport && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -5, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -5, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-full mt-1.5 w-48 bg-white rounded-lg border border-slate-200 shadow-lg z-20 overflow-hidden"
+                    >
+                      <button
+                        onClick={handleExportMarkdown}
+                        className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left"
+                      >
+                        <FileText className="w-4 h-4 text-slate-400" />
+                        Markdown (.md)
+                      </button>
+                      <button
+                        onClick={handleExportText}
+                        className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left border-t border-slate-100"
+                      >
+                        <FileDown className="w-4 h-4 text-slate-400" />
+                        Plain Text (.txt)
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -210,6 +355,33 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
             )}
           </div>
         </CardContent>
+
+        {/* Word count & read time bar */}
+        <AnimatePresence>
+          {displayText && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="px-6 py-2 border-t border-slate-100 bg-white flex items-center gap-4"
+            >
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <FileText className="w-3.5 h-3.5" />
+                <span>{stats.words.toLocaleString()} words</span>
+              </div>
+              <div className="w-px h-3 bg-slate-200" />
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <Clock className="w-3.5 h-3.5" />
+                <span>{stats.readTime} narration</span>
+              </div>
+              {isStreaming && (
+                <>
+                  <div className="w-px h-3 bg-slate-200" />
+                  <span className="text-xs text-slate-300 italic">counting...</span>
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Revision input — appears after initial generation completes */}
         <AnimatePresence>
