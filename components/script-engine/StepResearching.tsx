@@ -46,9 +46,9 @@ export function StepResearching({ topic, onComplete }: StepResearchingProps) {
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
     >
-      <Card className="w-full max-w-2xl mx-auto border-blue-200 shadow-lg">
+      <Card className="w-full max-w-2xl mx-auto border-slate-200 shadow-lg">
         <CardHeader className="text-center">
-          <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 text-black animate-spin mx-auto mb-4" />
           <CardTitle className="text-2xl font-bold">Researching the web...</CardTitle>
           <CardDescription>
             Gathering objective facts about &quot;{topic}&quot; to ground the AI generation.
@@ -87,7 +87,7 @@ export function StepResearching({ topic, onComplete }: StepResearchingProps) {
                 <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-blue-400 mt-4 pt-2 border-t border-slate-800"
+                  className="text-white mt-4 pt-2 border-t border-slate-800"
                 >
                   &gt; Research complete. Extracted {object.facts.length} facts. Proceeding to review...
                 </motion.div>

@@ -27,7 +27,7 @@ export function StepConfig({ onComplete }: StepConfigProps) {
       <Card className="w-full max-w-xl mx-auto shadow-lg border-slate-200">
         <CardHeader>
           <div className="flex items-center gap-3 mb-2">
-            <Settings2 className="w-6 h-6 text-blue-600" />
+            <Settings2 className="w-6 h-6 text-black" />
             <CardTitle className="text-2xl font-bold">Script Configuration</CardTitle>
           </div>
           <CardDescription>

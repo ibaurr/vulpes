@@ -133,7 +133,7 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
                 key={currentVersion}
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 shrink-0"
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-black border border-slate-200 shrink-0"
               >
                 v{currentVersion}
               </motion.span>
@@ -182,9 +182,9 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
                       key={rev.version}
                       initial={{ scale: 0.9, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white border border-blue-200 text-blue-700 shadow-sm max-w-[200px]"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white border border-slate-200 text-black shadow-sm max-w-[200px]"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-black" />
                       <span className="truncate">v{rev.version} — {rev.instruction}</span>
                     </motion.span>
                   ))}
@@ -204,7 +204,7 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
               </>
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-4 pt-20">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                <Loader2 className="w-8 h-8 animate-spin text-black" />
                 <p>Writing your script based on verified facts...</p>
               </div>
             )}
@@ -222,7 +222,7 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
             >
               <div className="px-6 py-4 border-t border-slate-100 bg-gradient-to-t from-slate-50/80 to-white">
                 <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-4 h-4 text-blue-500" />
+                  <Sparkles className="w-4 h-4 text-black" />
                   <span className="text-sm font-semibold text-slate-700">
                     Revise your script
                   </span>
@@ -237,7 +237,7 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
                     onKeyDown={handleKeyDown}
                     placeholder="e.g. Make the intro more suspenseful..."
                     disabled={isStreaming}
-                    className="flex-1 h-11 rounded-lg border border-slate-200 bg-white px-4 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-shadow"
+                    className="flex-1 h-11 rounded-lg border border-slate-200 bg-white px-4 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-shadow"
                   />
                   <Button
                     onClick={handleRevisionSubmit}
@@ -267,10 +267,10 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex items-center text-sm text-blue-600 font-medium"
+              className="flex items-center text-sm text-black font-medium"
             >
               <motion.div
-                className="w-2 h-2 bg-blue-600 rounded-full mr-2"
+                className="w-2 h-2 bg-black rounded-full mr-2"
                 animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
                 transition={{ duration: 1.2, repeat: Infinity }}
               />

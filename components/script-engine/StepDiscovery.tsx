@@ -28,8 +28,8 @@ export function StepDiscovery({ onComplete }: StepDiscoveryProps) {
     >
       <Card className="w-full max-w-2xl mx-auto shadow-lg border-slate-200">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-4">
-            <Sparkles className="w-8 h-8 text-blue-600" />
+          <div className="mx-auto w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
+            <Sparkles className="w-8 h-8 text-black" />
           </div>
           <CardTitle className="text-3xl font-bold tracking-tight">What do you want to explore?</CardTitle>
           <CardDescription className="text-lg">

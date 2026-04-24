@@ -50,7 +50,7 @@ export function ProgressStepper({ currentStep }: ProgressStepperProps) {
                       <motion.div
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1 }}
-                        className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shadow-md shadow-blue-200"
+                        className="w-10 h-10 rounded-full bg-black flex items-center justify-center shadow-md shadow-slate-200"
                       >
                         <Check className="w-5 h-5 text-white" strokeWidth={3} />
                       </motion.div>
@@ -62,13 +62,13 @@ export function ProgressStepper({ currentStep }: ProgressStepperProps) {
                         <motion.div
                           initial={{ scale: 0.8, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
-                          className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-300"
+                          className="w-10 h-10 rounded-full bg-black flex items-center justify-center shadow-lg shadow-slate-300"
                         >
                           <Icon className="w-5 h-5 text-white" />
                         </motion.div>
                         {/* Pulse ring */}
                         <motion.div
-                          className="absolute inset-0 rounded-full border-2 border-blue-400"
+                          className="absolute inset-0 rounded-full border-2 border-slate-400"
                           animate={{ scale: [1, 1.4, 1.4], opacity: [0.6, 0, 0] }}
                           transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
                         />
@@ -87,9 +87,9 @@ export function ProgressStepper({ currentStep }: ProgressStepperProps) {
                   <span
                     className={`mt-2 text-xs font-medium hidden sm:block transition-colors duration-300 ${
                       isCompleted
-                        ? "text-blue-600"
+                        ? "text-black"
                         : isCurrent
-                          ? "text-blue-700 font-semibold"
+                          ? "text-black font-semibold"
                           : "text-slate-400"
                     }`}
                   >
@@ -101,7 +101,7 @@ export function ProgressStepper({ currentStep }: ProgressStepperProps) {
                 {index < STEPS.length - 1 && (
                   <div className="flex-1 mx-2 sm:mx-3 h-0.5 bg-slate-200 rounded-full relative self-start mt-5">
                     <motion.div
-                      className="absolute inset-y-0 left-0 bg-blue-500 rounded-full"
+                      className="absolute inset-y-0 left-0 bg-black rounded-full"
                       initial={{ width: "0%" }}
                       animate={{
                         width: isCompleted ? "100%" : isCurrent ? "0%" : "0%",
