@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useCompletion } from "@ai-sdk/react"
 import ReactMarkdown from "react-markdown"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Loader2, Copy, Check, RefreshCcw } from "lucide-react"
-import { useState } from "react"
+import { Loader2, Copy, Check, RotateCcw } from "lucide-react"
+import { motion } from "framer-motion"
 
 interface StepGenerationProps {
   topic: string;
@@ -33,44 +33,56 @@ export function StepGeneration({ topic, facts, notes, tone, length, onReset }: S
     }
   }, [complete, topic, facts, notes, tone, length])
 
-  const copyToClipboard = () => {
+  const handleCopy = () => {
     navigator.clipboard.writeText(completion)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   return (
-    <Card className="w-full max-w-4xl mx-auto shadow-xl border-slate-200">
-      <CardHeader className="border-b border-slate-100 bg-slate-50/50 rounded-t-xl">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {isLoading && <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />}
-            <CardTitle className="text-xl font-bold">Generated Script: {topic}</CardTitle>
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+    >
+      <Card className="w-full max-w-4xl mx-auto shadow-2xl border-slate-200 bg-white">
+        <CardHeader className="border-b border-slate-100 pb-4 flex flex-row items-center justify-between">
+          <CardTitle className="text-xl font-bold text-slate-800">
+            Generated Script: {topic}
+          </CardTitle>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handleCopy} disabled={!completion}>
+              {copied ? <Check className="w-4 h-4 mr-2 text-green-500" /> : <Copy className="w-4 h-4 mr-2" />}
+              Copy
+            </Button>
           </div>
-          <Button variant="outline" size="sm" onClick={copyToClipboard} disabled={!completion}>
-            {copied ? <Check className="w-4 h-4 mr-2 text-green-600" /> : <Copy className="w-4 h-4 mr-2" />}
-            {copied ? "Copied!" : "Copy"}
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="bg-slate-50 p-6 sm:p-8 min-h-[400px] max-h-[60vh] overflow-y-auto prose prose-slate max-w-none">
+            {completion ? (
+              <ReactMarkdown>{completion}</ReactMarkdown>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-4 pt-20">
+                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                <p>Writing your script based on verified facts...</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+        <CardFooter className="pt-4 pb-4 px-6 border-t border-slate-100 flex justify-between bg-white rounded-b-xl">
+          <Button variant="ghost" onClick={onReset} className="text-slate-500">
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Start Over
           </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className="p-8 prose prose-slate max-w-none prose-headings:font-bold prose-h1:text-2xl prose-h2:text-xl min-h-[400px]">
-          {completion ? (
-            <ReactMarkdown>{completion}</ReactMarkdown>
-          ) : (
-            <div className="flex items-center justify-center h-[400px] text-slate-400 flex-col gap-4">
-              <Loader2 className="w-8 h-8 animate-spin" />
-              <p>Writing your script based on verified facts...</p>
+          {isLoading && (
+            <div className="flex items-center text-sm text-blue-600 font-medium animate-pulse">
+              <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-ping" />
+              Generating...
             </div>
           )}
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-between border-t border-slate-100 p-6 bg-slate-50/50 rounded-b-xl">
-        <Button variant="ghost" onClick={onReset} className="text-slate-500">
-          <RefreshCcw className="w-4 h-4 mr-2" />
-          Start Over
-        </Button>
-      </CardFooter>
-    </Card>
+        </CardFooter>
+      </Card>
+    </motion.div>
   )
 }
