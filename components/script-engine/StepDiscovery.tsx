@@ -38,14 +38,14 @@ export function StepDiscovery({ onComplete }: StepDiscoveryProps) {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
-            <Input 
-              placeholder="e.g. The life and death of Cleopatra" 
+            <Input
+              placeholder="e.g. The life and death of Alexander the Great"
               className="text-lg py-6 px-4"
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
             />
             <Button type="submit" size="lg" className="w-full text-lg h-12" disabled={!topic.trim()}>
-              Start Agentic Research
+              Research
             </Button>
           </form>
         </CardContent>
