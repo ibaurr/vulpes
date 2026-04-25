@@ -23,7 +23,7 @@ export default function Home() {
       <div className="max-w-6xl w-full flex flex-col items-center">
         <header className="text-center mb-12 relative w-full">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
-            Vulpes: AI Video Script Engine
+            Vulpes lagopus: AI Video Script Engine
           </h1>
           {/* History button in the header */}
           <div className="absolute right-0 top-1/2 -translate-y-1/2">

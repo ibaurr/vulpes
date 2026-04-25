@@ -6,7 +6,7 @@ test.describe('Script Engine Wizard Flow', () => {
     await page.goto('/')
     
     // Verify the landing page loaded
-    await expect(page.getByRole('heading', { name: /Vulpes/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /Vulpes lagopus/i })).toBeVisible()
     
     // Step 2: Discovery — enter a topic
     const topicInput = page.getByPlaceholder(/e\.g\./i)
@@ -69,10 +69,10 @@ test.describe('Script Engine Wizard Flow', () => {
     await page.goto('/')
     
     // Page title
-    await expect(page).toHaveTitle(/Vulpes/i)
+    await expect(page).toHaveTitle(/Vulpes lagopus/i)
     
     // Main heading
-    await expect(page.getByRole('heading', { name: /Vulpes.*Script Engine/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /Vulpes lagopus.*Script Engine/i })).toBeVisible()
     
     // Discovery step is active
     await expect(page.getByPlaceholder(/e\.g\./i)).toBeVisible()

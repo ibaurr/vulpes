@@ -1,6 +1,6 @@
-# Vulpes — AI Video Script Engine
+# Vulpes lagopus — AI Video Script Engine
 
-A research-first AI video script generator built with Next.js 16, the Vercel AI SDK, and GPT-4o. Instead of generating scripts from thin air, Vulpes first researches a topic, surfaces verifiable facts for human review, and then generates a grounded script — reducing hallucination by design.
+A research-first AI video script generator built with Next.js 16, the Vercel AI SDK, and GPT-4o. Instead of generating scripts from thin air, Vulpes lagopus first researches a topic, surfaces verifiable facts for human review, and then generates a grounded script — reducing hallucination by design.
 
 ![Discovery Step](public/screenshot-discovery.png)
 
@@ -71,8 +71,8 @@ A research-first AI video script generator built with Next.js 16, the Vercel AI 
 
 ```bash
 # Clone the repo
-git clone https://github.com/ibaurr/vulpes.git
-cd vulpes
+git clone https://github.com/ibaurr/vulpes-lagopus.git
+cd vulpes-lagopus
 
 # Install dependencies
 npm install
@@ -127,7 +127,7 @@ npm run test:e2e
 ## Project Structure
 
 ```
-vulpes/
+vulpes-lagopus/
 ├── app/
 │   ├── api/
 │   │   ├── research/route.ts    # Structured research streaming

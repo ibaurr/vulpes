@@ -13,19 +13,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vulpes",
+  title: "Vulpes lagopus",
   description: "Research First AI Video Script Generator",
   openGraph: {
-    title: "Vulpes",
+    title: "Vulpes lagopus",
     description: "Research First AI Video Script Generator",
-    url: "https://vulpes.vercel.app",
-    siteName: "Vulpes",
+    url: "https://vulpes-lagopus.vercel.app",
+    siteName: "Vulpes lagopus",
     images: [
       {
-        url: "https://vulpes.vercel.app/og-image.png",
+        url: "https://vulpes-lagopus.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Vulpes",
+        alt: "Vulpes lagopus",
       },
     ],
     locale: "en_US",
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vulpes",
+    title: "Vulpes lagopus",
     description: "Research First AI Video Script Generator",
-    images: ["https://vulpes.vercel.app/og-image.png"],
+    images: ["https://vulpes-lagopus.vercel.app/og-image.png"],
   },
 };
 

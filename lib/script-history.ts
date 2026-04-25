@@ -8,7 +8,7 @@ export interface SavedScript {
   createdAt: number;
 }
 
-const STORAGE_KEY = "vulpes-script-history"
+const STORAGE_KEY = "vulpes-lagopus-script-history"
 const MAX_ENTRIES = 20
 
 function generateId(): string {

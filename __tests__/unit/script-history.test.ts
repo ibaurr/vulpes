@@ -30,12 +30,12 @@ describe('script-history', () => {
 
     it('returns saved scripts from localStorage', () => {
       const scripts = [{ id: '1', topic: 'Test', script: 'Hello', tone: 'Neutral', length: '3', version: 1, createdAt: Date.now() }]
-      localStorageMock.setItem('vulpes-script-history', JSON.stringify(scripts))
+      localStorageMock.setItem('vulpes-lagopus-script-history', JSON.stringify(scripts))
       expect(getSavedScripts()).toEqual(scripts)
     })
 
     it('returns empty array if localStorage contains invalid JSON', () => {
-      localStorageMock.setItem('vulpes-script-history', 'not-json{{{')
+      localStorageMock.setItem('vulpes-lagopus-script-history', 'not-json{{{')
       expect(getSavedScripts()).toEqual([])
     })
   })
